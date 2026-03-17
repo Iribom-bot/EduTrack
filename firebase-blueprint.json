@@ -1,0 +1,156 @@
+{
+  "entities": {
+    "School": {
+      "title": "School",
+      "description": "Represents a school registered on the platform.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "The name of the school." },
+        "email": { "type": "string", "format": "email", "description": "School contact email." },
+        "phone": { "type": "string", "description": "School contact phone." },
+        "address": { "type": "string", "description": "Physical address of the school." },
+        "logoUrl": { "type": "string", "description": "URL to the school logo." },
+        "principalSignatureUrl": { "type": "string", "description": "URL to the principal's signature." },
+        "schoolStampUrl": { "type": "string", "description": "URL to the school stamp." },
+        "principalStampUrl": { "type": "string", "description": "URL to the principal's stamp." },
+        "adminId": { "type": "string", "description": "UID of the school admin user." }
+      },
+      "required": ["name", "email", "adminId"]
+    },
+    "User": {
+      "title": "User",
+      "description": "Represents a user (Admin, Teacher, Student) in the system.",
+      "type": "object",
+      "properties": {
+        "uid": { "type": "string", "description": "Firebase Auth UID." },
+        "email": { "type": "string", "format": "email", "description": "User email." },
+        "role": { "type": "string", "enum": ["super_admin", "school_admin", "teacher", "student"], "description": "User role." },
+        "schoolId": { "type": "string", "description": "ID of the school this user belongs to." },
+        "fullName": { "type": "string", "description": "Full name of the user." },
+        "username": { "type": "string", "description": "Username for login (especially for students/teachers)." },
+        "admissionNumber": { "type": "string", "description": "Admission number (for students)." },
+        "classId": { "type": "string", "description": "ID of the class (for students)." }
+      },
+      "required": ["uid", "role", "fullName"]
+    },
+    "Class": {
+      "title": "Class",
+      "description": "Represents an academic class.",
+      "type": "object",
+      "properties": {
+        "level": { "type": "string", "enum": ["Nursery", "Primary", "Junior Secondary", "Senior Secondary"], "description": "Education level." },
+        "name": { "type": "string", "description": "Class name (e.g., Primary 5)." },
+        "arm": { "type": "string", "description": "Class arm (e.g., A, B)." },
+        "schoolId": { "type": "string", "description": "ID of the school." }
+      },
+      "required": ["level", "name", "schoolId"]
+    },
+    "Subject": {
+      "title": "Subject",
+      "description": "Represents a subject taught in the school.",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Subject name." },
+        "code": { "type": "string", "description": "Subject code." },
+        "schoolId": { "type": "string", "description": "ID of the school." }
+      },
+      "required": ["name", "schoolId"]
+    },
+    "Student": {
+      "title": "Student",
+      "description": "Detailed student record.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Student's full name." },
+        "gender": { "type": "string", "enum": ["Male", "Female"], "description": "Student's gender." },
+        "classId": { "type": "string", "description": "ID of the current class." },
+        "admissionNumber": { "type": "string", "description": "Unique admission number." },
+        "parentName": { "type": "string", "description": "Name of parent/guardian." },
+        "parentPhone": { "type": "string", "description": "Phone number of parent." },
+        "schoolId": { "type": "string", "description": "ID of the school." },
+        "userId": { "type": "string", "description": "UID if the student has a login account." }
+      },
+      "required": ["fullName", "admissionNumber", "classId", "schoolId"]
+    },
+    "Teacher": {
+      "title": "Teacher",
+      "description": "Detailed teacher record.",
+      "type": "object",
+      "properties": {
+        "fullName": { "type": "string", "description": "Teacher's full name." },
+        "email": { "type": "string", "format": "email", "description": "Teacher's email." },
+        "phone": { "type": "string", "description": "Teacher's phone." },
+        "address": { "type": "string", "description": "Teacher's address." },
+        "schoolId": { "type": "string", "description": "ID of the school." },
+        "userId": { "type": "string", "description": "UID for login." }
+      },
+      "required": ["fullName", "schoolId"]
+    },
+    "Assignment": {
+      "title": "Assignment",
+      "description": "Links a teacher to a subject and class.",
+      "type": "object",
+      "properties": {
+        "teacherId": { "type": "string", "description": "ID of the teacher." },
+        "subjectId": { "type": "string", "description": "ID of the subject." },
+        "classId": { "type": "string", "description": "ID of the class." },
+        "schoolId": { "type": "string", "description": "ID of the school." }
+      },
+      "required": ["teacherId", "subjectId", "classId", "schoolId"]
+    },
+    "Session": {
+      "title": "Session",
+      "description": "Academic session (e.g., 2024/2025).",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Session name." },
+        "isActive": { "type": "boolean", "description": "Whether this is the current session." },
+        "schoolId": { "type": "string", "description": "ID of the school." }
+      },
+      "required": ["name", "isActive", "schoolId"]
+    },
+    "Term": {
+      "title": "Term",
+      "description": "Academic term (e.g., First Term).",
+      "type": "object",
+      "properties": {
+        "name": { "type": "string", "description": "Term name." },
+        "isActive": { "type": "boolean", "description": "Whether this is the current term." },
+        "sessionId": { "type": "string", "description": "ID of the parent session." },
+        "schoolId": { "type": "string", "description": "ID of the school." }
+      },
+      "required": ["name", "isActive", "sessionId", "schoolId"]
+    },
+    "Result": {
+      "title": "Result",
+      "description": "Student academic result for a subject.",
+      "type": "object",
+      "properties": {
+        "studentId": { "type": "string", "description": "ID of the student." },
+        "subjectId": { "type": "string", "description": "ID of the subject." },
+        "classId": { "type": "string", "description": "ID of the class at the time of result." },
+        "sessionId": { "type": "string", "description": "ID of the session." },
+        "termId": { "type": "string", "description": "ID of the term." },
+        "ca1": { "type": "number", "description": "1st Continuous Assessment (max 20)." },
+        "ca2": { "type": "number", "description": "2nd Continuous Assessment (max 20)." },
+        "exam": { "type": "number", "description": "Examination score (max 60)." },
+        "total": { "type": "number", "description": "Total score (max 100)." },
+        "grade": { "type": "string", "description": "Letter grade." },
+        "schoolId": { "type": "string", "description": "ID of the school." }
+      },
+      "required": ["studentId", "subjectId", "classId", "sessionId", "termId", "schoolId"]
+    }
+  },
+  "firestore": {
+    "/schools/{schoolId}": { "schema": "School", "description": "School details." },
+    "/users/{userId}": { "schema": "User", "description": "User profiles." },
+    "/schools/{schoolId}/classes/{classId}": { "schema": "Class", "description": "Classes in a school." },
+    "/schools/{schoolId}/subjects/{subjectId}": { "schema": "Subject", "description": "Subjects in a school." },
+    "/schools/{schoolId}/students/{studentId}": { "schema": "Student", "description": "Students in a school." },
+    "/schools/{schoolId}/teachers/{teacherId}": { "schema": "Teacher", "description": "Teachers in a school." },
+    "/schools/{schoolId}/assignments/{assignmentId}": { "schema": "Assignment", "description": "Teacher assignments." },
+    "/schools/{schoolId}/sessions/{sessionId}": { "schema": "Session", "description": "Academic sessions." },
+    "/schools/{schoolId}/sessions/{sessionId}/terms/{termId}": { "schema": "Term", "description": "Terms within a session." },
+    "/schools/{schoolId}/results/{resultId}": { "schema": "Result", "description": "Academic results." }
+  }
+}
